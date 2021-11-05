@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #main-container{
+            max-width: 900px;
+            display: flex;
+            margin: auto;
+            
+            height: 400px;
+            
+            gap: 6%;
+        }
+        #language-from{
+            flex-basis: 47%;
+            border: 1px solid black;
+            background-color: lavender;
+            
+            
+
+        }
+        #language-to{
+            flex-basis: 47%;
+            border: 1px solid black;
+            background-color: lavender;
+            
+
+        }
+        #target-language{
+            height: 300px;
+            width: 93%;
+            margin: 10px;
+            margin-right: 50px;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 16px;
+
+        }
+        #source-language{
+            height: 300px;
+            width: 93%;
+            margin: 10px;
+            margin-right: 50px;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 16px;
+
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <div id="language-from">
+            <h3>Translate From
+                <select name="source" id="source">
+                    <option value="en">English</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <option value="hi">Hindi</option>
+                </select>
+
+            </h3>
+
+            <textarea oninput="debounce(showTranslation,1000)" name="source-language" id="source-language"></textarea>
+        </div>
+        <div id="language-to">
+            <h3>Translate To
+                <select name="target" id="target">
+                    <option value="en">English</option>
+                    <option value="fr">French</option>
+                    <option value="es">Spanish</option>
+                    <option value="hi">Hindi</option>
+                </select>
+
+            </h3>
+
+            <textarea  name="target-language" id="target-language" ></textarea>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let timerId;
+
+    function showTranslation(){
+        document.getElementById("target-language").innerHTML="";
+        let data={
+            q : document.getElementById("source-language").value,
+            source : document.getElementById("source").value,
+            target : document.getElementById("target").value
+
+        }
+
+        data=JSON.stringify(data);
+
+        fetch("https://libretranslate.de/translate",{
+            method : "POST",
+            body : data,
+            headers : {
+                "Content-Type": "application/json"
+            }
+        })
+        .then((res)=>{
+            return res.json();
+        })
+        .then((res)=>{
+            console.log(res);
+            document.getElementById("target-language").textContent=res.translatedText;
+        })
+
+        
+
+
+    }
+
+
+    function debounce(func,delay){
+        if(timerId){
+            clearTimeout(timerId);
+        }
+        timerId=setTimeout(()=>{
+            func();
+        },delay);
+    }
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
